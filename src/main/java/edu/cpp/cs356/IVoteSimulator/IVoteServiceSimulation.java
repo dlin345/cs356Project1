@@ -2,16 +2,19 @@ package edu.cpp.cs356.IVoteSimulator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Random;
 
 public class IVoteServiceSimulation {
+	
 	private IVoteService iVote = new IVoteService();
 	String[] responseChoices = new String[] {"A", "B", "C", "D"};
 	
 	ArrayList<Student> singleChoiceStudents = new ArrayList<Student>();
 	ArrayList<Student> multipleChoiceStudents = new ArrayList<Student>();
 
+	/**
+	 * Configures a predetermined single-choice {@link Question} and its candidate answers.
+	 */
 	public void preConfigureSingleChoiceQuestion() {
 		System.out.println("===================================================");
 		System.out.println("Configuring single choice question...");
@@ -25,6 +28,10 @@ public class IVoteServiceSimulation {
 		System.out.println("Question: " +  question.getQuestion() + "\n");
 	}
 	
+	/**
+	 * Configures a predetermined multiple-choice {@link Question} and its 
+	 * candidate answers.
+	 */
 	public void preConfigureMultipleChoiceQuestion() {
 		System.out.println("===================================================");
 		System.out.println("Configuring multiple choice question...");
@@ -38,6 +45,13 @@ public class IVoteServiceSimulation {
 		System.out.println("Question: " +  question.getQuestion() + "\n");
 	}
 	
+	/**
+	 * Generates a random {@link Response}.  The number of candidate answers to randomly select may 
+	 * not exceed the specified maximum.
+	 * @param maxNumberOfResponses the maximum number of candidate answers to randomly select
+	 * @return the {@link Response} with randomly selected candidate answers not exceeding the 
+	 * specified maximum
+	 */
 	public Response generateRandomResponse(int maxNumberOfResponses) {
 		Response response = new Response();
 		
@@ -46,12 +60,17 @@ public class IVoteServiceSimulation {
 		for (int i = 0; i < maxNumberOfResponses; ++i) {
 			responseList[i] = this.responseChoices[rand.nextInt(responseChoices.length)];
 		}
-		HashSet<String> uniqueResponses = new HashSet<String>(Arrays.asList(responseList));
-		response.setResponseList(uniqueResponses.toArray(new String[uniqueResponses.size()]));
+		response.setResponseList(responseList);
 		
 		return response;
 	}
 	
+	/**
+	 * Generates a {@link Student} and a corresponding randomly generated {@link Response} with 
+	 * the number of randomly selected candidate answers not exceed the specified maximum.
+	 * @param maxNumberOfResponses the maximum number of candidate answers to randomly select
+	 * @return a {@link Student} with a randomly generated {@link Response}
+	 */
 	private Student generateRandomResponseStudent(int maxNumberOfResponses) {
 		Student student = new IVoteStudent();
 		Response response = generateRandomResponse(maxNumberOfResponses);
@@ -61,6 +80,12 @@ public class IVoteServiceSimulation {
 		return student;
 	}
 	
+	/**
+	 * Generates a {@link Student} with a randomly generated {@link Response}.  The {@link Response} 
+	 * associated with the {@link Student} has exactly one randomly selected candidate answer.
+	 * @param numberOfStudents the number of {@link Student}s to generate with random 
+	 * single-choice {@link Response}s
+	 */
 	public void generateRandomSingleChoiceStudents(int numberOfStudents) {
 		Student currentStudent;
 		for (int i = 0; i < numberOfStudents; ++i) {
@@ -70,6 +95,12 @@ public class IVoteServiceSimulation {
 		printStudentResponses(singleChoiceStudents);
 	}
 	
+	/**
+	 * Generates a {@link Student} with a randomly generated {@link Response}.  The {@link Response} 
+	 * associated with the {@link Student} has at least one randomly selected candidate answer.
+	 * @param numberOfStudents the number of {@link Student}s to generate with random 
+	 * multiple-choice {@link Response}s
+	 */
 	public void generateRandomMultipleChoiceStudents(int numberOfStudents) {
 		Random rand = new Random();
 		Student currentStudent;
@@ -80,34 +111,46 @@ public class IVoteServiceSimulation {
 		printStudentResponses(multipleChoiceStudents);
 	}
 	
-	private void resubmitResponse(Student student, Response response) {
-		System.out.println("Received student resubmission...");
-		iVote.recordStudentResponse(student, response);
-	}
-	
+	/**
+	 * Submits a randomly generated single-choice {@link Response} for a {@link Student} that 
+	 * has already submitted a {@link Response}.
+	 */
 	public void generateSingleResponseResubmission() {
 		Random rand = new Random();
 		Student student = singleChoiceStudents.get(rand.nextInt(singleChoiceStudents.size()));
 		Response response = generateRandomResponse(1);
-		resubmitResponse(student, response);
+		iVote.recordStudentResponse(student, response);
 		
 		printStudentResponses(singleChoiceStudents);
 	}
 	
+	/**
+	 * Submits a randomly generated multiple-choice {@link Response} for a {@link Student} that 
+	 * has already submitted a {@link Response}.
+	 */
 	public void generateMultipleResponseResubmission() {
 		Random rand = new Random();
 		Student student = multipleChoiceStudents.get(rand.nextInt(singleChoiceStudents.size()));
 		Response response = generateRandomResponse(rand.nextInt(responseChoices.length - 1) + 1);
-		resubmitResponse(student, response);
+		iVote.recordStudentResponse(student, response);
 		
 		printStudentResponses(multipleChoiceStudents);
 	}
 	
+	/**
+	 * Prints the statistics of the submission results to the console.
+	 */
 	public void printStatistics() {
 		iVote.printStatistics();
 		System.out.println("\n");
 	}
 	
+	/**
+	 * Prints each {@link Student}'s ID and corresponding {@link Response} from the specified 
+	 * list of {@link Student}s to the console.
+	 * @param studentList the list of {@link Student}s whose ID and {@link Response} are to be output 
+	 * to the console
+	 */
 	private void printStudentResponses(ArrayList<Student> studentList) {
 		for (Student student : studentList) {
 			System.out.println("Student ID: " + student.getID());

@@ -12,25 +12,46 @@ public class Question {
 	
 	// ordered mapping
 	private LinkedHashMap<String, Integer> responseChoices = new LinkedHashMap<String, Integer>();
-	private HashMap<Integer, Student> studentList = new HashMap<Integer, Student>();
+	private HashMap<String, Student> studentList = new HashMap<String, Student>();
 	
+	/**
+	 * Default constructor for {@link Question}
+	 */
 	public Question() {
 		
 	}
 	
+	/**
+	 * Constructs a {@link Question} with the specified question and candidate answers.
+	 * @param question the question to be associated with {@code this} {@link Question}
+	 * @param responseChoices the candidate answers for {@code this} {@link Question}
+	 */
 	public Question(String question, String[] responseChoices) {
 		this.question = question;
 		setResponseChoices(responseChoices);
 	}
 	
+	/**
+	 * Returns the question associated with {@code this} {@link Question}.
+	 * @return the question associated with {@code this} {@link Question}
+	 */
 	public String getQuestion() {
-		return question;
+		return this.question;
 	}
 
+	/**
+	 * Replaces the question in {@code this} {@link Question} with the specified question
+	 * @param question the question to be stored
+	 */
 	public void setQuestion(String question) {
 		this.question = question.toUpperCase();
 	}
 	
+	/**
+	 * Sets {@code this} {@link Question} to either a single-choice or multiple-choice question
+	 * @param isSingleChoice {@code true} if {@code this} {@link Question} is a 
+	 * single-choice question
+	 */
 	public void setQuestionIsSingleChoice(boolean isSingleChoice) {
 		this.singleChoice = isSingleChoice;
 		if (!isSingleChoice) {
@@ -38,18 +59,27 @@ public class Question {
 		}
 	}
 	
+	/**
+	 * Returns {@code true} if this {@link Question} is a single-choice question.
+	 * @return {@code true} if this {@link Question} is a single-choice question
+	 */
 	public boolean isSingleChoice() {
 		return singleChoice;
 	}
 	
 	/**
 	 * Returns appropriate String for plurality
-	 * @return
+	 * @return appropriate String for plurality
 	 */
 	public String getIsMultiple() {
 		return multiple;
 	}
 	
+	/**
+	 * Replaces the candidate answers for {@code this} {@link Question} with the specified 
+	 * candidate answers.
+	 * @param responseChoices the candidate answers to be stored
+	 */
 	public void setResponseChoices(String[] responseChoices) {
 		for(int i = 0; i < responseChoices.length; ++i) {
 			this.responseChoices.put(responseChoices[i].toUpperCase(), 0);
@@ -57,8 +87,8 @@ public class Question {
 	}
 	
 	/**
-	 * Returns String array of possible responses for @this {@link Question}
-	 * @return
+	 * Returns candidate answers for @this {@link Question}.
+	 * @return candidate answers for @this {@link Question}
 	 */
 	public String[] getResponseChoices() {
 		String[] responseChoices = new String[this.responseChoices.size()];
@@ -67,7 +97,6 @@ public class Question {
 			responseChoices[index] = response;
 			++index;
 		}
-		
 		return responseChoices;
 	}
 	
@@ -82,8 +111,8 @@ public class Question {
 	}
 	
 	/**
-	 * Returns the statistics of the submission results as a String array
-	 * @return
+	 * Returns the statistics of the submission results.
+	 * @return the statistics of the submission results
 	 */
 	public String[] getResponseChoiceResults() {
 		tallyStudentResponseResults();
@@ -98,7 +127,7 @@ public class Question {
 	/**
 	 * Adds {@code student} to list of {@link Student}s that responded to {@code this} {@link Question}.  
 	 * If {@code student} previously submitted a response, the previous response is overwritten.
-	 * @param student
+	 * @param student {@link Student} to be stored in list of students that responded
 	 * @throws InvalidResponse
 	 */
 	public void addStudentResponse(Student student) throws InvalidResponse {
@@ -107,6 +136,7 @@ public class Question {
 		} else {
 			// overwrites previously submitted response
 			if (studentList.containsKey(student.getID())) {
+				System.out.println("Received student resubmission...");
 				System.out.println("Already received response from student " + student.getID());
 				System.out.println("Overwriting previous response...\n");
 			}
@@ -114,10 +144,13 @@ public class Question {
 		}
 	}
 	
+	/**
+	 * Calculates the statistics of the submission results.
+	 */
 	private void tallyStudentResponseResults() {
 		resetStudentResponseTally();
 		
-		for (Integer studentID : studentList.keySet()) {
+		for (String studentID : studentList.keySet()) {
 			String[] studentResponseList = studentList.get(studentID).getStudentResponseList();
 			// increment tally for response choice for each student response
 			for (int i = 0; i < studentResponseList.length; ++i) {
@@ -128,6 +161,9 @@ public class Question {
 		}
 	}
 	
+	/**
+	 * Resets the statistics of the submission results.
+	 */
 	private void resetStudentResponseTally() {
 		for (Map.Entry<String, Integer> response : responseChoices.entrySet()) {
 			responseChoices.put(response.getKey(), 0);

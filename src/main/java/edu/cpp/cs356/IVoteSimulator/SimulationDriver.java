@@ -3,6 +3,7 @@ package edu.cpp.cs356.IVoteSimulator;
 public class SimulationDriver {
 
 	public static void main(String[] args) {
+		
 		int numberOfStudents = 5;
 		IVoteServiceSimulation iVoteSimulator = new IVoteServiceSimulation();
 		
