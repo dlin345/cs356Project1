@@ -11,6 +11,7 @@ public class IVoteStudent implements Student {
 	 * Default constructor for {@link IVoteStudent}.
 	 */
 	public IVoteStudent() {
+		super();
 		generateID();
 	}
 	
@@ -54,16 +55,6 @@ public class IVoteStudent implements Student {
 	 */
 	public String[] getStudentResponseList() {
 		return this.response.getResponseList();
-	}
-	
-	/**
-	 * Returns {@code true} if the {@link Response} associated with {@code this} {@link IVoteStudent} is 
-	 * a single-choice {@link Response}.
-	 * @return  {@code true} if the {@link Response} associated with {@code this} {@link IVoteStudent} is 
-	 * a single-choice {@link Response}
-	 */
-	public boolean isSingleChoiceResponse() {
-		return response.isSingleChoice();
 	}
 
 }

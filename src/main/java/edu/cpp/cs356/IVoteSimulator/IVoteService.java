@@ -46,7 +46,7 @@ public class IVoteService {
 		try {
 			currentIVoteAdmin.getCurrentQuestion().addStudentResponse(currentIVoteStudent);
 		} catch (InvalidResponse e) {
-			System.out.println("Invalid Response: too many responses\n");
+			System.out.println("\nInvalid Response: too many responses");
 		}
 	}
 	
@@ -55,10 +55,10 @@ public class IVoteService {
 	 * results for each possible answer to the console.
 	 */
 	public void printStatistics() {
-		System.out.println("\n***** SUBMISSION RESULTS *****");
+		System.out.println("***** SUBMISSION RESULTS *****");
 		System.out.println("QUESTION: " + currentIVoteAdmin.getCurrentQuestion().getQuestion());
 		
-		String[] results = currentIVoteAdmin.getCurrentQuestion().getResponseChoiceResults();
+		String[] results = currentIVoteAdmin.getCurrentQuestion().getCandidateAnswersResults();
 		for (String responseResult : results) {
 			System.out.println(responseResult);
 		}
@@ -69,8 +69,8 @@ public class IVoteService {
 	 */
 	public void printQuestionAndResponses() {
 		System.out.println("Question: " + currentIVoteAdmin.getCurrentQuestion().getQuestion() + "\n");
-		System.out.println("Choose one " + currentIVoteAdmin.getCurrentQuestion().getIsMultiple() + "of the following: ");
-		currentIVoteAdmin.getCurrentQuestion().printResponseChoices();
+		System.out.println("Choose up to " + currentIVoteAdmin.getCurrentQuestion().getSelectionLimit() + " of the following: ");
+		currentIVoteAdmin.getCurrentQuestion().printCandidateAnswers();
 	}
 	
 	/*
@@ -144,7 +144,7 @@ public class IVoteService {
 	 */
 	public Administrator administratorSetupInConsole() {
 		currentIVoteAdmin = new IVoteAdministrator();
-		Question question = new Question();
+		Question question = null;
 
 		configureQuestionTypeFromConsole(question);
 		configureQuestionFromConsole(question);
@@ -175,12 +175,14 @@ public class IVoteService {
 				e.printStackTrace();
 			}
 			
-			if (input.equals("1")) {
-				question.setQuestionIsSingleChoice(true);
+			if (!input.equals("1") && !input.equals("2")) {
+				System.out.println("\nInvalid input");
+			} else if (input.equals("1")){
+				question = new SingleChoiceQuestion();
+				question.setSelectionLimit(Integer.parseInt(input));
 			} else if (input.equals("2")) {
-				question.setQuestionIsSingleChoice(false);
-			} else {
-				System.out.println("\n Invalid input");
+				// set selection limit to total number of candidate answers
+				question = new MultipleChoiceQuestion(currentIVoteAdmin.getCurrentQuestion().getCandidateAnswersResults().length);
 			}
 		}
 		return question;
@@ -225,7 +227,7 @@ public class IVoteService {
 		}
 		
 		input = input.replaceAll("\\s", "");
-		question.setResponseChoices(input.split(","));
+		question.setCandidateAnswers(input.split(","));
 		
 		return question;
 	}

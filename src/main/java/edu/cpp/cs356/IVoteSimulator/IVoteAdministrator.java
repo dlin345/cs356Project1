@@ -13,6 +13,7 @@ public class IVoteAdministrator implements Administrator {
 	 * Default constructor, generates random 7-digit ID
 	 */
 	public IVoteAdministrator() {
+		super();
 		generateID();
 	}
 	

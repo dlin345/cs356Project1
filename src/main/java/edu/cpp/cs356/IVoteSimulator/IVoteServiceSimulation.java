@@ -20,12 +20,11 @@ public class IVoteServiceSimulation {
 		System.out.println("Configuring single choice question...");
 		
 		IVoteAdministrator administrator = new IVoteAdministrator();
-		Question question = new Question("Choose one of the following", responseChoices);
-		question.setQuestionIsSingleChoice(true);
+		Question question = new SingleChoiceQuestion("Choose one of the following", responseChoices);
 		
 		administrator.addQuestion(question);
 		this.iVote.addAdministrator(administrator);
-		System.out.println("Question: " +  question.getQuestion() + "\n");
+		this.iVote.printQuestionAndResponses();
 	}
 	
 	/**
@@ -37,12 +36,11 @@ public class IVoteServiceSimulation {
 		System.out.println("Configuring multiple choice question...");
 		
 		Administrator administrator = new IVoteAdministrator();
-		Question question = new Question("Choose one or more of the following", responseChoices);
-		question.setQuestionIsSingleChoice(false);
+		Question question = new MultipleChoiceQuestion("Choose one or more of the following", responseChoices);
 		
 		administrator.addQuestion(question);
 		this.iVote.addAdministrator(administrator);
-		System.out.println("Question: " +  question.getQuestion() + "\n");
+		this.iVote.printQuestionAndResponses();
 	}
 	
 	/**
@@ -156,6 +154,7 @@ public class IVoteServiceSimulation {
 			System.out.println("Student ID: " + student.getID());
 			System.out.println("Response: " + Arrays.toString(student.getStudentResponseList()));
 		}
+		System.out.println("\n");
 	}
 	
 }

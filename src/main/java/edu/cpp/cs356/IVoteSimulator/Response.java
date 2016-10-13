@@ -6,13 +6,12 @@ import java.util.HashSet;
 public class Response {
 	
 	private String[] responseList = null;
-	private boolean isSingleChoice = true;
 	
 	/**
 	 * Default constructor for {@link Response}.
 	 */
 	public Response() {
-		
+		super();
 	}
 	
 	/**
@@ -39,30 +38,6 @@ public class Response {
 		// removes duplicate responses
 		HashSet<String> uniqueResponses = new HashSet<String>(Arrays.asList(response));
 		this.responseList = uniqueResponses.toArray(new String[uniqueResponses.size()]);
-	}
-	
-	/**
-	 * Determines if {@code this} {@link Response} is a single-choice {@link Response}.
-	 */
-	private void setIsSingleChoice() {
-		int numberOfResponses = 0;
-		for (int i = 0; i < responseList.length; ++i) {
-			if (responseList[i] != null) {
-				numberOfResponses++;
-			}
-		}
-		if (numberOfResponses > 1) {
-			this.isSingleChoice = false;
-		}
-	}
-	
-	/**
-	 * Returns {@code true} if {@code this} {@link Response} is a single-choice {@link Response}.
-	 * @return {@code true} if {@code this} {@link Response} is a single-choice {@link Response}
-	 */
-	public boolean isSingleChoice() {
-		setIsSingleChoice();
-		return this.isSingleChoice;
 	}
 
 }
